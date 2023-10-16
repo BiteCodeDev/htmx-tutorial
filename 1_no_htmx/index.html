@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Todo List</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+
+    <style>
+      li {
+        list-style-type: none !important;
+      }
+      input:checked + label {
+        text-decoration: line-through;
+      }
+    </style>
+</head>
+<body>
+    <div class="container">
+      <br>
+        <h1>Todo <span>({{counts['done']}}/{{counts['total']}})</span></h1>
+        <form action="/add" method="post"  >
+          <input type="text" name="title" placeholder="New task" value=""  autocomplete="off">
+          <button type="submit" value="Add" class="button-primary" role="button"  >Add</button>
+        </form>
+        <form action="/set_task_status" method="post">
+            <ul>
+                % for task in tasks:
+                <li >
+                    <input type="checkbox" id="task{{task['id']}}"
+                           name="task"
+                           value="{{task['id']}}"
+                           % if task['done']:
+                           checked
+                           % end
+                    >
+                    <label for="task{{task['id']}}">{{task['title']}}</label>
+                    <a href="/delete/{{task['id']}}"  >X</a>
+                </li>
+                % end
+            </ul>
+            % if tasks:
+            <button type="submit" class="button-primary">Update</button>
+            % end
+        </form>
+    </div>
+</body>
+</html>
