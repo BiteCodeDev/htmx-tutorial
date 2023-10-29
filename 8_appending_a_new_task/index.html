@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Todo List</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <script src="https://unpkg.com/htmx.org@1.9.6"></script>
+
+    <style>
+      li {
+        list-style-type: none !important;
+      }
+      input:checked + label {
+        text-decoration: line-through;
+      }
+    </style>
+
+</head>
+<body>
+    <div class="container">
+      <br>
+        <h1>Todo <span>({{counts['done']}}/{{counts['total']}})</span></h1>
+        <form
+            hx-trigger="submit"
+            hx-post="/tasks/"
+            hx-target="ul"
+            hx-swap="beforeend"
+            hx-on:htmx:after-request="this.reset()"
+          >
+          <input type="text" name="title" placeholder="New task" value=""  autocomplete="off">
+          <button type="submit" value="Add" class="button-primary" role="button" >Add</button>
+        </form>
+
+        <ul>
+            % for task in tasks:
+            % include('_task.tpl', task=task)
+            % end
+        </ul>
+
+    </div>
+</body>
+</html>
