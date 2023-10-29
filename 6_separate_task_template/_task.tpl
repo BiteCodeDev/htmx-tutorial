@@ -9,7 +9,6 @@
     <label for="task{{task['id']}}">{{task['title']}}</label>
     <a
     hx-delete="/tasks/{{task['id']}}"
-    hx-swap="outerHTML"
     hx-target="body"
     >X</a>
 </li>
