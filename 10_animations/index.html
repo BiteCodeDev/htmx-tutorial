@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Todo List</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <script src="https://unpkg.com/htmx.org@1.9.6"></script>
+    <script>
+      function calculateTaskCount() {
+        const checkboxes = document.querySelectorAll('input[type="checkbox"][name="task"]');
+        const checkedCheckboxes = Array.from(checkboxes).filter(el => el.checked);
+        return `(${checkedCheckboxes.length}/${checkboxes.length})`
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        document.body.addEventListener('update-counter', () => {
+          document.getElementById('taskCount').innerHTML = calculateTaskCount()
+        })
+      })
+
+
+    </script>
+
+    <style>
+      li {
+        list-style-type: none !important;
+      }
+      input:checked + label {
+        text-decoration: line-through;
+      }
+
+    .htmx-swapping {
+      animation: removed-item-animation 2s cubic-bezier(.55,-0.04,.91,.94) forwards;
+      transform-origin: 0% 100%;
+    }
+
+    @keyframes removed-item-animation {
+        0% {
+            opacity: 1;
+            transform: rotateZ(0);
+        }
+
+        20% {
+            opacity: 1;
+            transform: rotateZ(140deg);
+        }
+
+         40% {
+           opacity: 1;
+            transform: rotateZ(60deg);
+        }
+
+        60% {
+            opacity: 1;
+            transform: rotateZ(110deg);
+        }
+
+        70% {
+            opacity: 1;
+            transform: rotateZ(90deg) translateX(0);
+        }
+
+        90% {
+            opacity: 1;
+            transform: rotateZ(90deg) translateX(600px);
+        }
+
+        100% {
+            opacity: 0;
+            transform: rotateZ(90deg) translateX(600px);
+        }
+    }
+
+    </style>
+
+</head>
+<body>
+    <div class="container">
+      <br>
+
+        <h1>Todo <span id="taskCount">({{counts['done']}}/{{counts['total']}})</span></h1>
+
+        <form
+            hx-trigger="submit"
+            hx-post="/tasks/"
+            hx-target="ul"
+            hx-swap="beforeend"
+            hx-on:htmx:after-request="this.reset()"
+          >
+          <input type="text" name="title" placeholder="New task" value=""  autocomplete="off">
+          <button type="submit" value="Add" class="button-primary" role="button" >Add</button>
+        </form>
+
+        <ul>
+            % for task in tasks:
+            % include('_task.tpl', task=task)
+            % end
+        </ul>
+
+    </div>
+</body>
+</html>
